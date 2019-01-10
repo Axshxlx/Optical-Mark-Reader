@@ -79,6 +79,7 @@ public class Main extends PApplet {
     }
 
     public void draw() {
+        background(200);
         if (frame == null) return;
         if (oldFilteredFrame == null) oldFilteredFrame = frame;
         DImage currentFiltered = (!loading && filteredFrame != null) ? filteredFrame : oldFilteredFrame;
@@ -98,6 +99,8 @@ public class Main extends PApplet {
             colorString = colorStringAt(mouseX, mouseY);
             count = 0;
         }
+        fill(0);
+        textSize(10);
         text(mousePositionString() + " " + colorString, 10, height - 20);
     }
 
@@ -189,7 +192,8 @@ public class Main extends PApplet {
             Class c = Class.forName(name);
             f = (PixelFilter) c.newInstance();
         } catch (Exception e) {
-            System.err.println("Something went wrong when instantiating your processImage! " + e.getMessage());
+            System.err.println("Something went wrong when instantiating your class!  (running its constructor). " +
+                    "The error is: " + e.getMessage());
             System.err.println(e.getMessage());
         }
 

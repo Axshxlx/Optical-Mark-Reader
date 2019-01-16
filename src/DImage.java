@@ -73,10 +73,10 @@ public class DImage {
 
     // --------------------------------------------------------------------------------------------------------------
 
-    public static final int OPAQUE_ALPHA_VAL = 255;
-    public static final int TRANSPARENT_ALPHA_VAL = 0;
+    private static final int OPAQUE_ALPHA_VAL = 255;
+    private static final int TRANSPARENT_ALPHA_VAL = 0;
 
-    public static ColorComponents2d getColorComponents2d(int[][] rgbPixels) {
+    private static ColorComponents2d getColorComponents2d(int[][] rgbPixels) {
         int h = rgbPixels.length;
         int w = rgbPixels[0].length;
         // TODO: arg check not size 0
@@ -100,7 +100,7 @@ public class DImage {
         return out;
     }
 
-    public static ColorComponents1d getColorComponents1d(int[][] rgbPixels) {
+    private static ColorComponents1d getColorComponents1d(int[][] rgbPixels) {
         int h = rgbPixels.length;
         int w = rgbPixels[0].length;
         // TODO: arg check not size 0
@@ -126,7 +126,7 @@ public class DImage {
         return out;
     }
 
-    public static ColorComponents2d getColorComponents2d(int[] rgbPixels, int w, int h) {
+    private static ColorComponents2d getColorComponents2d(int[] rgbPixels, int w, int h) {
         ColorComponents2d out = new ColorComponents2d(w, h);
         int spot = 0;    // index into pix
 
@@ -146,7 +146,7 @@ public class DImage {
         return out;
     }
 
-    public static ColorComponents1d getColorComponents1d(int[] rgbPixels, int w, int h) {
+    private static ColorComponents1d getColorComponents1d(int[] rgbPixels, int w, int h) {
         ColorComponents1d out = new ColorComponents1d(h, w);
         int length = w*h;
         for (int i=0; i < length; i++) {
@@ -163,7 +163,7 @@ public class DImage {
         return out;
     }
 
-    public static int[] combineColorComponents(ColorComponents2d in) {
+    private static int[] combineColorComponents(ColorComponents2d in) {
         int  pixheight = in.height;
         int pixwidth = in.width;
         int[] pixels = new int[pixwidth * pixheight];
@@ -179,7 +179,7 @@ public class DImage {
         return pixels;
     }
 
-    public static int[] combineColorComponents(short[] red, short[] green, short[] blue, short[] alpha) {
+    private static int[] combineColorComponents(short[] red, short[] green, short[] blue, short[] alpha) {
         // TODO: arg checking
         int[] pixels = new int[red.length];
 
@@ -192,7 +192,7 @@ public class DImage {
         return pixels;
     }
 
-    public static int[] combineColorComponents(short[] red, short[] green, short[] blue) {
+    private static int[] combineColorComponents(short[] red, short[] green, short[] blue) {
         // TODO: arg checking
         int[] pixels = new int[red.length];
 
@@ -205,7 +205,7 @@ public class DImage {
         return pixels;
     }
 
-    public static int[] convertToRGBGreyscale(int[] pixels) {
+    private static int[] convertToRGBGreyscale(int[] pixels) {
         int[] out = new int[pixels.length];
 
         for (int i = 0; i < out.length; i++) {
@@ -215,7 +215,7 @@ public class DImage {
         return out;
     }
 
-    public static short[] convertToShortGreyscale(int[] pixels) {
+    private static short[] convertToShortGreyscale(int[] pixels) {
         short[] out = new short[pixels.length];
 
         for (int i = 0; i < out.length; i++) {
@@ -225,7 +225,7 @@ public class DImage {
         return out;
     }
 
-    public static short getGreyShortVal(int color) {
+    private static short getGreyShortVal(int color) {
         int num = color;
         int blue = num & 255;
         num = num >> 8;
@@ -238,7 +238,7 @@ public class DImage {
         return (short)black;
     }
 
-    public static int getOpaqueGreyValue(int color) {
+    private static int getOpaqueGreyValue(int color) {
         int num = color;
         int blue = num & 255;
         num = num >> 8;
@@ -255,7 +255,7 @@ public class DImage {
         return num;
     }
 
-    public static int getGreyValue(int color) {
+    private static int getGreyValue(int color) {
         int num = color;
         int blue = num & 255;
         num = num >> 8;
@@ -272,11 +272,11 @@ public class DImage {
         return num;
     }
 
-    public static int color(int red, int green, int blue) {
+    private static int color(int red, int green, int blue) {
         return color(red, green, blue, OPAQUE_ALPHA_VAL);
     }
 
-    public static int color(int red, int green, int blue, int alpha) {
+    private static int color(int red, int green, int blue, int alpha) {
         int tmp = alpha;
         tmp = tmp << 8;
         tmp += red;
@@ -287,23 +287,23 @@ public class DImage {
         return tmp;
     }
 
-    public static int getRed(int color) {
+    private static int getRed(int color) {
         return (color >> 16) & 255;
     }
 
-    public static int getGreen(int color) {
+    private static int getGreen(int color) {
         return (color >> 8) & 255;
     }
 
-    public static int getBlue(int color) {
+    private static int getBlue(int color) {
         return (color & 255);
     }
 
-    public static int getAlpha(int color) {
+    private static int getAlpha(int color) {
         return (color >> 24) & 255;
     }
 
-    public static int[][] convertTo2dArray(int[] pixels, int w, int h) {
+    private static int[][] convertTo2dArray(int[] pixels, int w, int h) {
         int[][] out = new int[h][w];
         int loc = 0;
         for (int r = 0; r < h; r++) {
@@ -316,7 +316,7 @@ public class DImage {
         return out;
     }
 
-    public static short[][] convertTo2dArray(short[] pixels, int w, int h) {
+    private static short[][] convertTo2dArray(short[] pixels, int w, int h) {
         short[][] out = new short[h][w];
         int loc = 0;
         for (int r = 0; r < h; r++) {
@@ -329,7 +329,7 @@ public class DImage {
         return out;
     }
 
-    public static void fill1dArray(int[][] vals, int[] arr) {
+    private static void fill1dArray(int[][] vals, int[] arr) {
         if (arr.length != vals.length*vals[0].length) {
             System.err.println("in fill1dArray: different number of elements in 2d and 1d arrays");
         }
@@ -344,7 +344,7 @@ public class DImage {
         // no return necessary because we just changed the values in arr
     }
 
-    public static void fill1dArray(short[][] vals, int[] arr) {
+    private static void fill1dArray(short[][] vals, int[] arr) {
         if (arr.length != vals.length*vals[0].length) {
             System.err.println("in fill1dArray: different number of elements in 2d and 1d arrays");
         }
@@ -359,7 +359,7 @@ public class DImage {
         // no return necessary because we just changed the values in arr
     }
 
-    public static void fill1dArray(short[] vals, int[] arr) {
+    private static void fill1dArray(short[] vals, int[] arr) {
         for (int i = 0; i < vals.length; i++) {
             arr[i] = shortToRGBGrey(vals[i]);
         }
@@ -483,7 +483,7 @@ public class DImage {
     }
 
     // Data transfer object
-    public static class ColorComponents2d {
+    private static class ColorComponents2d {
         public int width, height;
         public short[][] red, green, blue, alpha;
 
@@ -498,7 +498,7 @@ public class DImage {
     }
 
     // Data transfer object
-    public static class ColorComponents1d {
+    private static class ColorComponents1d {
         public short[] red, green, blue, alpha;
         public int width, height;
 

@@ -102,6 +102,11 @@ public class Main extends PApplet {
         fill(0);
         textSize(10);
         text(mousePositionString() + " " + colorString, 10, height - 20);
+
+        stroke(200);
+        strokeWeight(1);
+        line(0, mouseY, width, mouseY);
+        line(mouseX, 0, mouseX, height);
     }
 
     private String colorStringAt(int mouseX, int mouseY) {

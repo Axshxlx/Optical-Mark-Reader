@@ -197,9 +197,7 @@ public class Main extends PApplet {
             }
         }
 
-        System.out.println("KEY!");
         if (frame != null && (filter instanceof Clickable)) {
-            System.out.println("RUNING IT");
             ((Clickable)filter).keyPressed(key);
         }
     }

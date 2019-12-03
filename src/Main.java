@@ -118,8 +118,16 @@ public class Main extends PApplet {
         return "r: " + red +  " g: " + green + " b: " + blue;
     }
 
+    private int getImageMouseX() {
+        return mouseX - centerX + frame.getWidth()/2;
+    }
+
+    private int getImageMouseY() {
+        return mouseY - centerY + frame.getHeight()/2;
+    }
+
     private String mousePositionString() {
-        return "(" + (mouseX - centerX + frame.getWidth()/2) + ", " + (mouseY - centerY + frame.getHeight()/2) + ")";
+        return "(" + getImageMouseX() + ", " + getImageMouseY() + ")";
     }
 
     public void drawFrame(DImage toDisplay, DImage original, DImage filtered, int x, int y) {
@@ -187,6 +195,18 @@ public class Main extends PApplet {
                     movie.play();
                 }
             }
+        }
+
+        System.out.println("KEY!");
+        if (frame != null && (filter instanceof Clickable)) {
+            System.out.println("RUNING IT");
+            ((Clickable)filter).keyPressed(key);
+        }
+    }
+
+    public void mouseReleased() {
+        if (this.filter != null && this.filter instanceof Clickable) {
+            ((Clickable)filter).mouseClicked(getImageMouseX(), getImageMouseY(), frame);
         }
     }
 

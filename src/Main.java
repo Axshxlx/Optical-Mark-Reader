@@ -1,4 +1,5 @@
 import processing.core.PApplet;
+import processing.core.PImage;
 import processing.video.Capture;
 import processing.video.Movie;
 
@@ -13,10 +14,14 @@ public class Main extends PApplet {
     private static final int WEBCAM_WIDTH = 640;
     private static final int WEBCAM_HEIGHT = 480;
     private static final int WEBCAM = 1;
+    private static final int IMAGE = 2;
+    private static final int VIDEO = 3;
+
     private static int displayWidth, displayHeight;
 
     private static Capture webcam;
     private static Movie movie;
+    private static DImage inputImage;
 
     private static boolean currentlyViewingFilteredImage = false;
     private static int source;
@@ -39,7 +44,7 @@ public class Main extends PApplet {
     }
 
     private void displayVideoSourceChoiceDialog() {
-        Object[] options = {"Load mp4 from disk",
+        Object[] options = {"Load mp4 or image from disk",
                 "Use a webcam"};
         this.source = JOptionPane.showOptionDialog(null,
                 "What video source would you like to use?",
@@ -54,25 +59,49 @@ public class Main extends PApplet {
             displayHeight = WEBCAM_HEIGHT;
             displayWidth = WEBCAM_WIDTH;
         } else {
-            String userDirLocation = System.getProperty("user.dir");
-            File userDir = new File(userDirLocation);
-            JFileChooser fc = new JFileChooser(userDir);
-            int returnVal = fc.showOpenDialog(null);
-            File file = fc.getSelectedFile();
+            String sourcePath = fileChooser();
+            this.inputImage = tryToLoadStillImage(sourcePath);
+            source = IMAGE;
 
-            String moviePath = file.getAbsolutePath();
+            if (inputImage == null) {
+                this.movie = new Movie(this, sourcePath);
+                this.source = VIDEO;
+            }
+        }
+    }
 
-            this.movie = new Movie(this, moviePath);
+    private String fileChooser() {
+        String userDirLocation = System.getProperty("user.dir");
+        File userDir = new File(userDirLocation);
+        JFileChooser fc = new JFileChooser(userDir);
+        int returnVal = fc.showOpenDialog(null);
+        File file = fc.getSelectedFile();
+        return file.getAbsolutePath();
+    }
+
+    private DImage tryToLoadStillImage(String moviePath) {
+        try {
+            PImage input = this.loadImage(moviePath);
+            return new DImage(input);
+        } catch (Exception e) {
+            return null;
         }
     }
 
     public void setup() {
-        if (source != WEBCAM && movie == null) {
+        if (source == VIDEO && movie == null) {
             System.err.println("No mp4 file loaded, switching to webcam as video source");
             source = WEBCAM;
         } else if (source != WEBCAM && movie != null) {
             movie.play();
-        } else if (source == WEBCAM && webcam == null) {
+        }
+
+        if (source == IMAGE && inputImage == null) {
+            System.err.println("No mp4 file loaded, switching to webcam as video source");
+            source = WEBCAM;
+        }
+
+        if (source == WEBCAM && webcam == null) {
             webcam = new Capture(this, WEBCAM_WIDTH, WEBCAM_HEIGHT);
             webcam.start();
         }
@@ -80,7 +109,12 @@ public class Main extends PApplet {
 
     public void draw() {
         background(200);
-        if (frame == null) return;
+        if (source == IMAGE) {
+            applyFilterToImage(inputImage.getPImage());
+        }
+        if (frame == null) {
+            return;
+        }
         if (oldFilteredFrame == null) oldFilteredFrame = frame;
         DImage currentFiltered = (!loading && filteredFrame != null) ? filteredFrame : oldFilteredFrame;
 
@@ -144,13 +178,17 @@ public class Main extends PApplet {
     }
 
     public void captureEvent(Capture c) {
+        c.read();
+        applyFilterToImage(c.get());
+    }
+
+    public void applyFilterToImage(PImage img) {
         if (paused) return;
 
         oldFilteredFrame = filteredFrame;
         loading = true;
 
-        c.read();
-        frame = new DImage(c.get());
+        frame = new DImage(img);
         filteredFrame = new DImage(frame);
         filteredFrame = runFilters(filteredFrame);
 

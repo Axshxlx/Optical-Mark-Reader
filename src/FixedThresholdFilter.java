@@ -16,6 +16,7 @@ public class FixedThresholdFilter implements PixelFilter {
             }
         }
 
+        img.setPixels(grid);
         return img;
     }
 

@@ -54,8 +54,12 @@ public class DImage {
     }
 
     public void setPixels(int[][] pixels) {
+        if (img.height != pixels.length || img.width != pixels[0].length) {
+            img.resize(pixels[0].length, pixels.length);
+        }
+
         img.loadPixels();
-        DImage.fill1dArray(pixels, img.pixels);   // TODO: does this work??
+        DImage.fill1dArray(pixels, img.pixels);
         img.updatePixels();
     }
 
@@ -66,6 +70,10 @@ public class DImage {
     }
 
     public void setPixels(short[][] pixels) {
+        if (img.height != pixels.length || img.width != pixels[0].length) {
+            img.resize(pixels[0].length, pixels.length);
+        }
+
         int[] colorPixels = new int[pixels.length*pixels[0].length];
         fill1dArray(pixels, colorPixels);
         this.setPixels(colorPixels);
@@ -471,11 +479,21 @@ public class DImage {
     }
 
     public int getHeight() {
-        return this.height;
+        if (this.img == null) {
+            System.err.println("No image defined for DImage");
+            return 0;
+        }
+
+        return img.height;
     }
 
     public int getWidth() {
-        return this.width;
+        if (this.img == null) {
+            System.err.println("No image defined for DImage");
+            return 0;
+        }
+
+        return img.width;
     }
 
     public void setColorChannels(ColorComponents2d channels) {

@@ -116,6 +116,7 @@ public class Main extends PApplet {
             return;
         }
         if (oldFilteredFrame == null) oldFilteredFrame = frame;
+
         DImage currentFiltered = (!loading && filteredFrame != null) ? filteredFrame : oldFilteredFrame;
 
         if (currentlyViewingFilteredImage) {
@@ -136,6 +137,15 @@ public class Main extends PApplet {
         fill(0);
         textSize(10);
         text(mousePositionString() + " " + colorString, 10, height - 20);
+
+        if (paused) {
+            text("Press 'p' to unpause", 100, height-20);
+        }
+
+        if (!currentlyViewingFilteredImage) {
+            text("Press 's' to show filtered image", 200, height - 20);
+        }
+
 
         stroke(200);
         strokeWeight(1);

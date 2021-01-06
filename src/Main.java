@@ -17,8 +17,6 @@ public class Main extends PApplet {
     private static final int IMAGE = 2;
     private static final int VIDEO = 3;
 
-    private static int displayWidth, displayHeight;
-
     private static Capture webcam;
     private static Movie movie;
     private static DImage inputImage;
@@ -29,7 +27,6 @@ public class Main extends PApplet {
     private boolean loading = false;
 
     private int centerX, centerY;
-    private int imageWidth, imageHeight;
 
     private PixelFilter filter;
     private int count = 0;
@@ -38,7 +35,7 @@ public class Main extends PApplet {
 
     public void settings() {
         displayVideoSourceChoiceDialog();
-        size(800, 800);
+        size(800, 650);
         centerX = width/2;
         centerY = height/2;
     }
@@ -119,10 +116,10 @@ public class Main extends PApplet {
 
         DImage currentFiltered = (!loading && filteredFrame != null) ? filteredFrame : oldFilteredFrame;
 
-        if (currentlyViewingFilteredImage) {
+        if (!currentlyViewingFilteredImage) {
             drawFrame(frame, frame, currentFiltered, centerX - frame.getWidth()/2, centerY - frame.getHeight()/2);
         } else {        // viewing filtered
-            drawFrame(currentFiltered, frame, currentFiltered, centerX - frame.getWidth()/2, centerY - frame.getHeight()/2);
+            drawFrame(currentFiltered, frame, currentFiltered, centerX - currentFiltered.getWidth()/2, centerY - currentFiltered.getHeight()/2);
         }
 
         fill(100);
@@ -135,17 +132,19 @@ public class Main extends PApplet {
             count = 0;
         }
         fill(0);
-        textSize(10);
-        text(mousePositionString() + " " + colorString, 10, height - 20);
+        textSize(16);
+        textAlign(LEFT, CENTER);
+        text(mousePositionString() + " " + colorString, 10, height - 22);
+
+        if (filter == null) {
+            text("Press 'f' to load a filter", 350, height - 22);
+        } else if (!currentlyViewingFilteredImage) {
+            text("Press 's' to show filtered image", 350, height - 22);
+        }
 
         if (paused) {
-            text("Press 'p' to unpause", 100, height-20);
+            text("Press 'p' to unpause", 620, height-22);
         }
-
-        if (!currentlyViewingFilteredImage) {
-            text("Press 's' to show filtered image", 200, height - 20);
-        }
-
 
         stroke(200);
         strokeWeight(1);

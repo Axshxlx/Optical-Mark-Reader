@@ -24,7 +24,7 @@ public class Main extends PApplet {
 
     private static boolean currentlyViewingFilteredImage = false;
     private static int source;
-    private DImage frame, filteredFrame, oldFilteredFrame;
+    private DImage frame, filteredFrame, oldFilteredFrame, currentDisplayFrame;
     private boolean loading = false;
 
     private int centerX, centerY;
@@ -116,6 +116,7 @@ public class Main extends PApplet {
         if (oldFilteredFrame == null) oldFilteredFrame = frame;
 
         DImage currentFiltered = (!loading && filteredFrame != null) ? filteredFrame : oldFilteredFrame;
+        currentDisplayFrame = (!currentlyViewingFilteredImage) ? frame : filteredFrame;
 
         if (!currentlyViewingFilteredImage) {
             drawFrame(frame, frame, currentFiltered, centerX - frame.getWidth()/2, centerY - frame.getHeight()/2);
@@ -123,7 +124,7 @@ public class Main extends PApplet {
             drawFrame(currentFiltered, frame, currentFiltered, centerX - currentFiltered.getWidth()/2, centerY - currentFiltered.getHeight()/2);
         }
 
-        fill(100);
+        fill(200);
         rect(0, height-20*2, width, 20*2);
         fill(0);
 
@@ -135,7 +136,7 @@ public class Main extends PApplet {
         fill(0);
         textSize(16);
         textAlign(LEFT, CENTER);
-        text(mousePositionString() + " " + colorString, 10, height - 22);
+        text(mousePositionString(currentDisplayFrame) + " " + colorString, 10, height - 22);
 
         if (filter == null) {
             text("Press 'f' to load a filter", 350, height - 22);
@@ -162,16 +163,16 @@ public class Main extends PApplet {
         return "r: " + red +  " g: " + green + " b: " + blue;
     }
 
-    private int getImageMouseX() {
-        return mouseX - centerX + frame.getWidth()/2;
+    private int getImageMouseX(DImage displayImage) {
+        return mouseX - centerX + displayImage.getWidth()/2;
     }
 
-    private int getImageMouseY() {
-        return mouseY - centerY + frame.getHeight()/2;
+    private int getImageMouseY(DImage displayImage) {
+        return mouseY - centerY + displayImage.getHeight()/2;
     }
 
-    private String mousePositionString() {
-        return "(" + getImageMouseX() + ", " + getImageMouseY() + ")";
+    private String mousePositionString(DImage displayImage) {
+        return "(" + getImageMouseX(displayImage) + ", " + getImageMouseY(displayImage) + ")";
     }
 
     public void drawFrame(DImage toDisplay, DImage original, DImage filtered, int x, int y) {
@@ -252,7 +253,7 @@ public class Main extends PApplet {
 
     public void mouseReleased() {
         if (this.filter != null && this.filter instanceof Clickable) {
-            ((Clickable)filter).mouseClicked(getImageMouseX(), getImageMouseY(), frame);
+            ((Clickable)filter).mouseClicked(getImageMouseX(currentDisplayFrame), getImageMouseY(currentDisplayFrame), currentDisplayFrame);
         }
     }
 

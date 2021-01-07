@@ -1,8 +1,5 @@
-import processing.core.PApplet;
 import processing.core.PImage;
-
-import java.awt.*;
-import java.util.Arrays;
+// TODO: comment this class
 
 public class DImage {
     private PImage img;

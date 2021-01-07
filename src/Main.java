@@ -5,9 +5,10 @@ import processing.video.Movie;
 
 import javax.swing.*;
 import java.io.File;
+import java.util.Arrays;
 
 /**
- * Side-by-side webcam view for image filtering
+ * Display class for working with image filters
  * by David Dobervich
  */
 public class Main extends PApplet {

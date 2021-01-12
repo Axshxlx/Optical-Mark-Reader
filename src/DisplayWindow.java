@@ -11,19 +11,19 @@ import java.util.Arrays;
  * Display class for working with image filters
  * by David Dobervich
  */
-public class Main extends PApplet {
+public class DisplayWindow extends PApplet {
     private static final int WEBCAM_WIDTH = 640;
     private static final int WEBCAM_HEIGHT = 480;
     private static final int WEBCAM = 1;
     private static final int IMAGE = 2;
     private static final int VIDEO = 3;
 
-    private static Capture webcam;
-    private static Movie movie;
-    private static DImage inputImage;
+    private Capture webcam;
+    private Movie movie;
+    private DImage inputImage;
 
-    private static boolean currentlyViewingFilteredImage = false;
-    private static int source;
+    private boolean currentlyViewingFilteredImage = false;
+    private int source;
     private DImage frame, filteredFrame, oldFilteredFrame, currentDisplayFrame;
     private boolean loading = false;
 
@@ -35,10 +35,27 @@ public class Main extends PApplet {
     private boolean paused = false;
 
     public void settings() {
-        displayVideoSourceChoiceDialog();
+        initializeImageSource(args);
+
         size(800, 650);
         centerX = width/2;
         centerY = height/2;
+    }
+
+    private void initializeImageSource(String[] args) {
+        if (args == null || args.length == 0) {         // if no input provided, do it interactively with user
+            displayVideoSourceChoiceDialog();
+            return;
+        }
+
+        String sourcePath = args[0];
+        this.inputImage = tryToLoadStillImage(sourcePath);
+        source = IMAGE;
+
+        if (inputImage == null) {
+            this.movie = new Movie(this, sourcePath);
+            this.source = VIDEO;
+        }
     }
 
     private void displayVideoSourceChoiceDialog() {
@@ -100,7 +117,7 @@ public class Main extends PApplet {
         }
 
         if (source == WEBCAM && webcam == null) {
-            webcam = new Capture(this, WEBCAM_WIDTH, WEBCAM_HEIGHT);
+            webcam = new Capture(this, WEBCAM_WIDTH/2, WEBCAM_HEIGHT/2);
             webcam.start();
         }
     }
@@ -272,8 +289,12 @@ public class Main extends PApplet {
         return f;
     }
 
-    public static void main(String[] args) {
-        PApplet.main("Main", args);
+    public static void showFor(String filePath) {
+        PApplet.main("DisplayWindow", new String[]{filePath});
+    }
+
+    public static void getInputInteractively() {
+        PApplet.main("DisplayWindow", new String[]{});
     }
 }
 

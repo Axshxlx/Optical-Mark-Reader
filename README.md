@@ -22,5 +22,5 @@ The code from the master branch works correctly on Windows, so the issue is most
 # What I Have Tried So Far
 
 1. Downloaded Processing 4.0a3 and downloaded video library. Then copied <code>macosx</code>, <code>gst1-java-core-1.2.0.jar</code>, <code>video.jar</code>, and <code>jna.jar</code> files to <code>lib</code> in this project. No results.
-2. Downloaded Video Library of Processing 2.0 beta 5 and copied the same file to <code>lib</code>. No results.
+2. Downloaded Video Library of Processing 2.0 beta 5 and copied the same files to <code>lib</code>. No results.
 3. checked for updates on the Video Library in Processing 4.0a3, but found no new updates.

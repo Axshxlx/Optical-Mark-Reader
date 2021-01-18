@@ -15,4 +15,4 @@ When trying to show a video from the disk (such as .mov or .mp4) a <code>NullPoi
 &nbsp;&nbsp;&nbsp;&nbsp;<code>at processing.core.PApplet.runSketch(PApplet.java:10742)</code>\
 &nbsp;&nbsp;&nbsp;&nbsp;<code>at processing.core.PApplet.main(PApplet.java:10504)</code>\
 &nbsp;&nbsp;&nbsp;&nbsp;<code>at DisplayWindow.getInputInteractively(DisplayWindow.java:297)</code>\
-&nbsp;&nbsp;&nbsp;&nbsp;<code>at RunMe.main(RunMe.java:7)</code>
+  &nbsp;&nbsp;&nbsp;&nbsp;<code>at RunMe.main(RunMe.java:7)</code>

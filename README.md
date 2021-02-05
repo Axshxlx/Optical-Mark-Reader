@@ -1,14 +1,16 @@
 # VideoFilter
-This repository contains the working version of https://github.com/ddobervich/VideoFilter for mac. Once cloned, please complete the following steps to ensure you can start working immediately without wasting time closing a bunch of pop-ups:
+This repository contains a mac version of our video filter framework. Once cloned, please complete the following steps to ensure you can start working immediately without wasting time closing a bunch of pop-ups:
 
-1. Copy the path of the `macosx64` folder inside <code>lib</code>
+1. Copy the path of the `macosx64` folder inside <code>lib</code>.  ( the path is the string describing the folder location )
 2. Open Terminal and excecute the following command:  
-  `spctl --add <paste path here>/*`
-3. Then copyt the path of `gstreamer-1.0` that is inside `macosx64` Then excecute the command above.
-
+  `spctl --add <paste path here>/*`    (note: you must include the /* )
+3. Copy the path of `gstreamer-1.0` that is inside `macosx64` Then excecute the command above.
+4. In the terminal, excecute the command again but this time pasting the gstreamer-1.0 path:  
+  `spctl --add <paste path here>/*`    (note: you must include the /* )
+  
 # That's It!
 
-***WARNING: DO NOT TRY TO RUN THIS PROJECT IN WINDOWS OR LINUX! USE THE LINK ABOVE FOR WINDOWS AND LINUX!***
+***Note: Windows and Linux machines can still display images with this framework, but can't use the webcam or videos***
 
 If you are wondering what the command `spctl --add <paste path here>/*` does, Here is your answer:
 

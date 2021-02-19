@@ -32,6 +32,7 @@ public class DisplayWindow extends PApplet {
     private int count = 0;
     private String colorString = "";
     private boolean paused = false;
+    private boolean initiallyPaused = false;
 
     public void settings() {
         initializeImageSource(args);
@@ -119,6 +120,8 @@ public class DisplayWindow extends PApplet {
             webcam = new Capture(this, WEBCAM_WIDTH/2, WEBCAM_HEIGHT/2);
             webcam.start();
         }
+
+        initiallyPaused = (source == IMAGE);    // initially pause if it's an image
     }
 
     public void draw() {
@@ -168,6 +171,11 @@ public class DisplayWindow extends PApplet {
         strokeWeight(1);
         line(0, mouseY, width, mouseY);
         line(mouseX, 0, mouseX, height);
+
+        if (filter != null && initiallyPaused) {          // hack hack!  display one frame, then pause
+            initiallyPaused = false;
+            paused = true;
+        }
     }
 
     private String colorStringAt(int mouseX, int mouseY) {

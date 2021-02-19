@@ -37,7 +37,7 @@ public class DisplayWindow extends PApplet {
     public void settings() {
         initializeImageSource(args);
 
-        size(800, 650);
+        size(900, 800);
         centerX = width/2;
         centerY = height/2;
     }

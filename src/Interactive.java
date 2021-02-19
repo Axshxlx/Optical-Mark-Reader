@@ -1,4 +1,4 @@
-public interface Clickable {
+public interface Interactive {
     /***
      * Action you wish to perform when the mouse is clicked.  For example, store the color of the pixel where
      * the mouse was clicked to set a threshold or a target color.

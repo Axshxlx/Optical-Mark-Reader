@@ -13,11 +13,5 @@ public class BasicColorFilter implements PixelFilter {
         img.setColorChannels(red, green, blue);
         return img;
     }
-
-    @Override
-    public void drawOverlay(PApplet window, DImage original, DImage filtered) {
-
-    }
-
 }
 

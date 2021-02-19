@@ -5,7 +5,6 @@ import processing.video.Movie;
 
 import javax.swing.*;
 import java.io.File;
-import java.util.Arrays;
 
 /**
  * Display class for working with image filters
@@ -199,8 +198,9 @@ public class DisplayWindow extends PApplet {
             pushMatrix();
             translate(x, y);
 
-            filter.drawOverlay(this, original, filtered);
-
+            if (filter instanceof Drawable) {
+                ((Drawable)filter).drawOverlay(this, original, filtered);
+            }
             popMatrix();
         }
     }
@@ -263,14 +263,14 @@ public class DisplayWindow extends PApplet {
             }
         }
 
-        if (frame != null && (filter instanceof Clickable)) {
-            ((Clickable)filter).keyPressed(key);
+        if (frame != null && (filter instanceof Interactive)) {
+            ((Interactive)filter).keyPressed(key);
         }
     }
 
     public void mouseReleased() {
-        if (this.filter != null && this.filter instanceof Clickable) {
-            ((Clickable)filter).mouseClicked(getImageMouseX(currentDisplayFrame), getImageMouseY(currentDisplayFrame), currentDisplayFrame);
+        if (this.filter != null && this.filter instanceof Interactive) {
+            ((Interactive)filter).mouseClicked(getImageMouseX(currentDisplayFrame), getImageMouseY(currentDisplayFrame), currentDisplayFrame);
         }
     }
 

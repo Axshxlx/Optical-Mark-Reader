@@ -1,6 +1,11 @@
 import processing.core.PApplet;
 
 public class FixedThresholdFilter implements PixelFilter {
+    private int threshold;
+
+    public FixedThresholdFilter() {
+        threshold = 127;
+    }
 
     @Override
     public DImage processImage(DImage img) {
@@ -8,7 +13,7 @@ public class FixedThresholdFilter implements PixelFilter {
 
         for (int r = 0; r < grid.length; r++) {
             for (int c = 0; c < grid[r].length; c++) {
-                if (grid[r][c] > 127) {
+                if (grid[r][c] > threshold) {
                     grid[r][c] = 255;
                 } else {
                     grid[r][c] = 0;
@@ -19,11 +24,5 @@ public class FixedThresholdFilter implements PixelFilter {
         img.setPixels(grid);
         return img;
     }
-
-    @Override
-    public void drawOverlay(PApplet window, DImage original, DImage filtered) {
-
-    }
-
 }
 

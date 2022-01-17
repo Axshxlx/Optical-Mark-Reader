@@ -1,9 +1,12 @@
+import com.github.sarxos.webcam.Webcam;
 import processing.core.PApplet;
 import processing.core.PImage;
 import processing.video.Capture;
 import processing.video.Movie;
 
+
 import javax.swing.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 
 /**
@@ -17,7 +20,7 @@ public class DisplayWindow extends PApplet {
     private static final int IMAGE = 2;
     private static final int VIDEO = 3;
 
-    private Capture webcam;
+    private Webcam webcam;
     private Movie movie;
     private DImage inputImage;
 
@@ -35,6 +38,7 @@ public class DisplayWindow extends PApplet {
     private boolean initiallyPaused = false;
 
     public void settings() {
+
         initializeImageSource(args);
 
         size(900, 800);
@@ -117,8 +121,10 @@ public class DisplayWindow extends PApplet {
         }
 
         if (source == WEBCAM && webcam == null) {
-            webcam = new Capture(this, WEBCAM_WIDTH/2, WEBCAM_HEIGHT/2);
-            webcam.start();
+            System.out.println("Loading webcam...");
+            webcam = Webcam.getDefault();
+            webcam.open();
+
         }
 
         initiallyPaused = (source == IMAGE);    // initially pause if it's an image
@@ -128,6 +134,12 @@ public class DisplayWindow extends PApplet {
         background(200);
         if (source == IMAGE) {
             applyFilterToImage(inputImage.getPImage());
+        }
+        if(source==WEBCAM){
+            if(webcam == null) return;
+            BufferedImage img = webcam.getImage();
+            if(img == null) return;
+            applyFilterToImage(new PImage(img));
         }
         if (frame == null) {
             return;
@@ -211,11 +223,6 @@ public class DisplayWindow extends PApplet {
             }
             popMatrix();
         }
-    }
-
-    public void captureEvent(Capture c) {
-        c.read();
-        applyFilterToImage(c.get());
     }
 
     public void applyFilterToImage(PImage img) {

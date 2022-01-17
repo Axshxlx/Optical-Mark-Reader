@@ -1,3 +1,5 @@
+package core;
+
 import processing.core.PImage;
 // TODO: comment this class
 
@@ -81,7 +83,7 @@ public class DImage {
     private static final int OPAQUE_ALPHA_VAL = 255;
     private static final int TRANSPARENT_ALPHA_VAL = 0;
 
-    private static ColorComponents2d getColorComponents2d(int[][] rgbPixels) {
+    protected static ColorComponents2d getColorComponents2d(int[][] rgbPixels) {
         int h = rgbPixels.length;
         int w = rgbPixels[0].length;
         // TODO: arg check not size 0
@@ -477,7 +479,7 @@ public class DImage {
 
     public int getHeight() {
         if (this.img == null) {
-            System.err.println("No image defined for DImage");
+            System.err.println("No image defined for core.DImage");
             return 0;
         }
 
@@ -486,7 +488,7 @@ public class DImage {
 
     public int getWidth() {
         if (this.img == null) {
-            System.err.println("No image defined for DImage");
+            System.err.println("No image defined for core.DImage");
             return 0;
         }
 

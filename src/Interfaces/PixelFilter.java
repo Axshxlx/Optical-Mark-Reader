@@ -1,4 +1,6 @@
-import processing.core.PApplet;
+package Interfaces;
+
+import core.DImage;
 
 public interface PixelFilter {
     /***

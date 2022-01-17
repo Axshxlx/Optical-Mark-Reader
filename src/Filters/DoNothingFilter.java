@@ -1,4 +1,7 @@
-import processing.core.PApplet;
+package Filters;
+
+import Interfaces.PixelFilter;
+import core.DImage;
 
 public class DoNothingFilter implements PixelFilter {
 

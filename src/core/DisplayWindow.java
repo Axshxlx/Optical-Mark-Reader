@@ -1,11 +1,15 @@
+package core;
+
+import Interfaces.Drawable;
+import Interfaces.Interactive;
+import Interfaces.PixelFilter;
 import com.github.sarxos.webcam.Webcam;
 import processing.core.PApplet;
 import processing.core.PImage;
-import processing.video.Capture;
 import processing.video.Movie;
 
-
 import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -14,11 +18,9 @@ import java.io.File;
  * by David Dobervich
  */
 public class DisplayWindow extends PApplet {
-    private static final int WEBCAM_WIDTH = 640;
-    private static final int WEBCAM_HEIGHT = 480;
     private static final int WEBCAM = 1;
     private static final int IMAGE = 2;
-    private static final int VIDEO = 3;
+    private static final int VIDEO = 3;     // TODO: remove this mode or fix gstreamer library?
 
     private Webcam webcam;
     private Movie movie;
@@ -37,13 +39,28 @@ public class DisplayWindow extends PApplet {
     private boolean paused = false;
     private boolean initiallyPaused = false;
 
-    public void settings() {
+    private int initWidth = 900;
+    private int initHeight = 800;
 
+    public void settings() {
         initializeImageSource(args);
 
-        size(900, 800);
-        centerX = width/2;
-        centerY = height/2;
+        try {
+            for (String arg : args) {
+                int index = arg.indexOf("dimensions:");
+                if (index != -1) {
+                    String dimString = arg.substring(index + "dimensions:".length());
+                    initWidth = Integer.parseInt(dimString.substring(0, dimString.indexOf("x")));
+                    initHeight = Integer.parseInt(dimString.substring(dimString.indexOf("x") + 1));
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Error setting dimensions. Using defaults of 900x800");
+        }
+
+        size(initWidth, initHeight);
+        centerX = width / 2;
+        centerY = height / 2;
     }
 
     private void initializeImageSource(String[] args) {
@@ -52,7 +69,18 @@ public class DisplayWindow extends PApplet {
             return;
         }
 
-        String sourcePath = args[0];
+        String sourcePath = null;
+        for (String arg : args) {
+            int startIndex = arg.indexOf("filepath:");
+            if (startIndex != -1) {
+                sourcePath = args[0].substring(startIndex + "filepath:".length());
+            }
+        }
+        if (sourcePath == null) {
+            System.err.println("malformed image source path.  Format \"filepath:<the file path>\"");
+            displayVideoSourceChoiceDialog();
+            return;
+        }
         this.inputImage = tryToLoadStillImage(sourcePath);
         source = IMAGE;
 
@@ -63,27 +91,24 @@ public class DisplayWindow extends PApplet {
     }
 
     private void displayVideoSourceChoiceDialog() {
-        Object[] options = {"Load mp4 or image from disk",
+        Object[] options = {"Load image from disk",
                 "Use a webcam"};
         this.source = JOptionPane.showOptionDialog(null,
-                "What video source would you like to use?",
-                "Video source",
+                "What source would you like to use?",
+                "Source",
                 JOptionPane.YES_NO_CANCEL_OPTION,
                 JOptionPane.QUESTION_MESSAGE,
                 null,
                 options,
                 options[1]);
 
-        if (source == WEBCAM) {
-            displayHeight = WEBCAM_HEIGHT;
-            displayWidth = WEBCAM_WIDTH;
-        } else {
+        if (source != WEBCAM) {
             String sourcePath = fileChooser();
             this.inputImage = tryToLoadStillImage(sourcePath);
             source = IMAGE;
 
             if (inputImage == null) {
-                this.movie = new Movie(this, sourcePath);
+                this.movie = new Movie(this, sourcePath);   // TODO: this is probably broken
                 this.source = VIDEO;
             }
         }
@@ -109,22 +134,27 @@ public class DisplayWindow extends PApplet {
 
     public void setup() {
         if (source == VIDEO && movie == null) {
-            System.err.println("No mp4 file loaded, switching to webcam as video source");
+            System.err.println("No file loaded, switching to webcam as video source");
             source = WEBCAM;
         } else if (source != WEBCAM && movie != null) {
             movie.play();
         }
 
         if (source == IMAGE && inputImage == null) {
-            System.err.println("No mp4 file loaded, switching to webcam as video source");
+            System.err.println("No file loaded, switching to webcam as video source");
             source = WEBCAM;
         }
 
         if (source == WEBCAM && webcam == null) {
             System.out.println("Loading webcam...");
             webcam = Webcam.getDefault();
-            webcam.open();
 
+            Dimension[] views = webcam.getViewSizes();
+            webcam.setViewSize(views[views.length-1]);  // set view size to largest supported
+
+            this.displayHeight = (int)(webcam.getViewSize().getHeight());
+            this.displayWidth = (int)(webcam.getViewSize().getWidth());
+            webcam.open();
         }
 
         initiallyPaused = (source == IMAGE);    // initially pause if it's an image
@@ -135,10 +165,10 @@ public class DisplayWindow extends PApplet {
         if (source == IMAGE) {
             applyFilterToImage(inputImage.getPImage());
         }
-        if(source==WEBCAM){
-            if(webcam == null) return;
+        if (source == WEBCAM) {
+            if (webcam == null) return;
             BufferedImage img = webcam.getImage();
-            if(img == null) return;
+            if (img == null) return;
             applyFilterToImage(new PImage(img));
         }
         if (frame == null) {
@@ -150,13 +180,13 @@ public class DisplayWindow extends PApplet {
         currentDisplayFrame = (!currentlyViewingFilteredImage) ? frame : filteredFrame;
 
         if (!currentlyViewingFilteredImage) {
-            drawFrame(frame, frame, currentFiltered, centerX - frame.getWidth()/2, centerY - frame.getHeight()/2);
+            drawFrame(frame, frame, currentFiltered, centerX - frame.getWidth() / 2, centerY - frame.getHeight() / 2);
         } else {        // viewing filtered
-            drawFrame(currentFiltered, frame, currentFiltered, centerX - currentFiltered.getWidth()/2, centerY - currentFiltered.getHeight()/2);
+            drawFrame(currentFiltered, frame, currentFiltered, centerX - currentFiltered.getWidth() / 2, centerY - currentFiltered.getHeight() / 2);
         }
 
         fill(200);
-        rect(0, height-20*2, width, 20*2);
+        rect(0, height - 20 * 2, width, 20 * 2);
         fill(0);
 
         count++;
@@ -176,7 +206,7 @@ public class DisplayWindow extends PApplet {
         }
 
         if (paused) {
-            text("Press 'p' to unpause", 620, height-22);
+            text("Press 'p' to unpause", 620, height - 22);
         }
 
         stroke(200);
@@ -192,19 +222,19 @@ public class DisplayWindow extends PApplet {
 
     private String colorStringAt(int mouseX, int mouseY) {
         loadPixels();
-        int c = pixels[mouseY*width + mouseX];
+        int c = pixels[mouseY * width + mouseX];
         float red = red(c);
         float green = green(c);
         float blue = blue(c);
-        return "r: " + red +  " g: " + green + " b: " + blue;
+        return "r: " + red + " g: " + green + " b: " + blue;
     }
 
     private int getImageMouseX(DImage displayImage) {
-        return mouseX - centerX + displayImage.getWidth()/2;
+        return mouseX - centerX + displayImage.getWidth() / 2;
     }
 
     private int getImageMouseY(DImage displayImage) {
-        return mouseY - centerY + displayImage.getHeight()/2;
+        return mouseY - centerY + displayImage.getHeight() / 2;
     }
 
     private String mousePositionString(DImage displayImage) {
@@ -219,7 +249,7 @@ public class DisplayWindow extends PApplet {
             translate(x, y);
 
             if (filter instanceof Drawable) {
-                ((Drawable)filter).drawOverlay(this, original, filtered);
+                ((Drawable) filter).drawOverlay(this, original, filtered);
             }
             popMatrix();
         }
@@ -279,25 +309,26 @@ public class DisplayWindow extends PApplet {
         }
 
         if (frame != null && (filter instanceof Interactive)) {
-            ((Interactive)filter).keyPressed(key);
+            ((Interactive) filter).keyPressed(key);
         }
     }
 
     public void mouseReleased() {
         if (this.filter != null && this.filter instanceof Interactive) {
-            ((Interactive)filter).mouseClicked(getImageMouseX(currentDisplayFrame), getImageMouseY(currentDisplayFrame), currentDisplayFrame);
+            ((Interactive) filter).mouseClicked(getImageMouseX(currentDisplayFrame), getImageMouseY(currentDisplayFrame), currentDisplayFrame);
         }
     }
 
     private PixelFilter loadNewFilter() {
-        String name = JOptionPane.showInputDialog("Type the name of your processImage class");
+        String name = JOptionPane.showInputDialog("Type the name of your processImage class (without the .java)");
         PixelFilter f = null;
         try {
-            Class c = Class.forName(name);
+            Class c = Class.forName("Filters."+name);
             f = (PixelFilter) c.newInstance();
         } catch (Exception e) {
             System.err.println("Something went wrong when instantiating your class!  (running its constructor). " +
-                    "The error is: " + e.getMessage());
+                    "Double-check you typed the name correctly.  Double-check you have a constructor that takes " +
+                    "no inputs!");
             System.err.println(e.getMessage());
         }
 
@@ -305,11 +336,19 @@ public class DisplayWindow extends PApplet {
     }
 
     public static void showFor(String filePath) {
-        PApplet.main("DisplayWindow", new String[]{filePath});
+        PApplet.main("core.DisplayWindow", new String[]{"filepath:"+filePath});
+    }
+
+    public static void showFor(String filePath, int width, int height) {
+        PApplet.main("core.DisplayWindow", new String[]{"filepath:"+filePath, "dimensions:"+width+"x"+height});
     }
 
     public static void getInputInteractively() {
-        PApplet.main("DisplayWindow", new String[]{});
+        PApplet.main("core.DisplayWindow", new String[]{});
+    }
+
+    public static void getInputInteractively(int width, int height) {
+        PApplet.main("core.DisplayWindow", new String[]{"dimensions:"+width+"x"+height});
     }
 }
 

@@ -1,6 +1,6 @@
 import core.DisplayWindow;
 
-public class RunMe {
+public class FilterTest {
     public static void main(String[] args) {
         // --== Load an image to filter ==--
         DisplayWindow.showFor("images/6.jpg", 800, 600);

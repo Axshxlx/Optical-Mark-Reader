@@ -20,8 +20,10 @@ public class FilterTest {
         DImage img = new DImage(in);       // you can make a DImage from a PImage
 
         System.out.println("Running filter on page 1....");
-        PixelFilter filter = new DisplayInfoFilter();
-        filter.processImage(img);
+        DisplayInfoFilter filter = new DisplayInfoFilter();
+        filter.processImage(img);  // if you want, you can make a different method
+                                   // that does the image processing an returns a DTO with
+                                   // the information you want
     }
 
     private static void SaveAndDisplayExample() {

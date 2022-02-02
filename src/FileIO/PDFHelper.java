@@ -17,15 +17,16 @@ public class PDFHelper {
 
     /***
      * Load a pdf and convert each page to a PImage.  Return a List of PImages.
-     * @param path path to the pdf including full filename and file extension
+     * @param pathToPdf path to the pdf including full filename and file extension
      * @return a List of PImage objects corresponding to the pages of the pdf
      */
-    public static ArrayList<PImage> getPImagesFromPdf(String path) {
-        InputStream is = PDFHelper.class.getResourceAsStream(path);
+    public static ArrayList<PImage> getPImagesFromPdf(String pathToPdf) {
+        // InputStream is = PDFHelper.class.getResourceAsStream(path);
         ArrayList<PImage> images = new ArrayList<PImage>();
         PDDocument pdf = null;
 
         try {
+            InputStream is = new FileInputStream(pathToPdf);
             pdf = PDDocument.load(is);
         } catch (IOException e) {
             System.out.println("Couldn't load pdf");

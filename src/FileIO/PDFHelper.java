@@ -1,9 +1,7 @@
 package FileIO;
 
 import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,8 +79,8 @@ public class PDFHelper {
 
         List<PDPage> pages = pdf.getDocumentCatalog().getAllPages();
 
-        if (pageNum >= 0 && pageNum < pages.size()) {
-            PDPage page = pages.get(pageNum);
+        if (pageNum >= 0 && pageNum <= pages.size()) {
+            PDPage page = pages.get(pageNum-1);
 
             try {
                 BufferedImage image = page.convertToImage();
@@ -96,7 +94,10 @@ public class PDFHelper {
                 e.printStackTrace();
             }
 
-        } else return null;
+        } else {
+            System.out.println("You requested page " + pageNum + " but there are only " + pages.size() + " pages");
+            return null;
+        }
 
         try {
             pdf.close();
@@ -107,5 +108,4 @@ public class PDFHelper {
 
         return null;
     }
-
 }

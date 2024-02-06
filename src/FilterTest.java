@@ -12,12 +12,12 @@ public class FilterTest {
         // ----------------------------------------------------------------
         // >>> Run this to save a pdf page and run filters on the image <<<
         // ----------------------------------------------------------------
-        // SaveAndDisplayExample();
+        SaveAndDisplayExample(1);
 
         // -------------------------------------------------------------------------------
         // >>> Run this to run your filter on a page /without/ displaying anything <<<
         // -------------------------------------------------------------------------------
-        RunTheFilter();
+        // RunTheFilter();
     }
 
     private static void RunTheFilter() {
@@ -33,9 +33,9 @@ public class FilterTest {
 
     }
 
-    private static void SaveAndDisplayExample() {
-        PImage img = PDFHelper.getPageImage("assets/OfficialOMRSampleDoc.pdf",1);
-        img.save(currentFolder + "assets/page1.png");
+    private static void SaveAndDisplayExample(int page) {
+        PImage img = PDFHelper.getPageImage("assets/OfficialOMRSampleDoc.pdf",page);
+        img.save(currentFolder + "assets/page" + page + ".png");
 
         DisplayWindow.showFor("assets/page1.png");
     }

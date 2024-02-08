@@ -5,25 +5,18 @@ import processing.core.PImage;
 
 public class DImage {
     private PImage img;
-    private int width, height;
     private ColorComponents2d channels;
 
     public DImage(int width, int height) {
         img = new PImage(width, height);
-        this.width = width;
-        this.height = height;
     }
 
     public DImage(PImage img) {
         this.img = img;
-        this.width = img.width;
-        this.height = img.height;
     }
 
     public DImage(DImage frame) {
-        this.width = frame.width;
-        this.height = frame.height;
-        this.img = new PImage(width, height);
+        this.img = new PImage(frame.getWidth(), frame.getHeight());
         this.img.loadPixels();
         System.arraycopy(frame.getColorPixelArray(), 0, this.img.pixels, 0, this.img.pixels.length);
         this.img.updatePixels();
@@ -35,7 +28,7 @@ public class DImage {
     }
 
     public int[][] getColorPixelGrid() {
-        return convertTo2dArray( getColorPixelArray(), this.width, this.height );
+        return convertTo2dArray( getColorPixelArray(), img.width, img.height );
     }
 
     public short[] getBWPixelArray() {
@@ -43,7 +36,7 @@ public class DImage {
     }
 
     public short[][] getBWPixelGrid() {
-        return convertTo2dArray( getBWPixelArray(), this.width, this.height );
+        return convertTo2dArray( getBWPixelArray(), img.width, img.height );
     }
 
     public void setPixels(int[] pixels) {
@@ -55,8 +48,6 @@ public class DImage {
     public void setPixels(int[][] pixels) {
         if (img.height != pixels.length || img.width != pixels[0].length) {
             img.resize(pixels[0].length, pixels.length);
-            this.width = pixels[0].length;
-            this.height = pixels.length;
         }
 
         img.loadPixels();

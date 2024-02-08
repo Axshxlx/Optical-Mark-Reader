@@ -48,13 +48,15 @@ public class DImage {
 
     public void setPixels(int[] pixels) {
         img.loadPixels();
-        img.pixels = pixels;    // TODO: does this work?
+        img.pixels = pixels.clone();
         img.updatePixels();
     }
 
     public void setPixels(int[][] pixels) {
         if (img.height != pixels.length || img.width != pixels[0].length) {
             img.resize(pixels[0].length, pixels.length);
+            this.width = pixels[0].length;
+            this.height = pixels.length;
         }
 
         img.loadPixels();

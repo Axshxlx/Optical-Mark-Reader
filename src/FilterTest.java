@@ -12,12 +12,12 @@ public class FilterTest {
         // ----------------------------------------------------------------
         // >>> Run this to save a pdf page and run filters on the image <<<
         // ----------------------------------------------------------------
-        SaveAndDisplayExample(1);
+        SaveAndDisplayExample(1); //make this a for-loop and pass in i to the method
 
         // -------------------------------------------------------------------------------
         // >>> Run this to run your filter on a page /without/ displaying anything <<<
         // -------------------------------------------------------------------------------
-        // RunTheFilter();
+        RunTheFilter();
     }
 
     private static void RunTheFilter() {

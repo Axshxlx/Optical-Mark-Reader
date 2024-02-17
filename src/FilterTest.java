@@ -12,20 +12,18 @@ public class FilterTest {
         // ----------------------------------------------------------------
         // >>> Run this to save a pdf page and run filters on the image <<<
         // ----------------------------------------------------------------
-        SaveAndDisplayExample(1); //make this a for-loop and pass in i to the method
-
-        // -------------------------------------------------------------------------------
-        // >>> Run this to run your filter on a page /without/ displaying anything <<<
-        // -------------------------------------------------------------------------------
-        RunTheFilter();
+        for (int i = 1; i <= 6 ; i++) {
+            SaveAndDisplayExample(i);
+            System.out.println("Page "+i+ " has been loaded.");
+            RunTheFilter(i);
+            System.out.println("Page "+i+ " has had the filter run on it.");
+        }
     }
 
-    private static void RunTheFilter() {
+    private static void RunTheFilter(int i ) {
         System.out.println("Loading pdf....");
-        PImage in = PDFHelper.getPageImage("assets/OfficialOMRSampleDoc.pdf",1);
+        PImage in = PDFHelper.getPageImage("assets/OfficialOMRSampleDoc.pdf",i);
         DImage img = new DImage(in);       // you can make a DImage from a PImage
-
-        System.out.println("Running filter on page 1....");
         DisplayInfoFilter filter = new DisplayInfoFilter();
         filter.processImage(img);  // if you want, you can make a different method
                                    // that does the image processing an returns a DTO with
@@ -37,6 +35,6 @@ public class FilterTest {
         PImage img = PDFHelper.getPageImage("assets/OfficialOMRSampleDoc.pdf",page);
         img.save(currentFolder + "assets/page" + page + ".png");
 
-        DisplayWindow.showFor("assets/page1.png");
+//        DisplayWindow.showFor("assets/page1.png");
     }
 }
